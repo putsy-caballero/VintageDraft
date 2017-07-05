@@ -3,9 +3,10 @@ from entities.entity_enums import LeagueType, ScoringType, Positions, AvgObp, De
 from entities.Pitcher import Pitcher
 import uuid
 
+
 class LeagueSettings(object):
 
-    def __init__(self, league_type, scoring_type, positions, pos_qual_career, avgobp, min_ab_year, min_ip_year, team_career_ip, type_distribution):
+    def __init__(self, league_type, scoring_type, positions, pos_qual_career, avgobp, min_ab_year, min_ip_year, min_gp_year, team_career_ip, type_distribution):
         self.uuid = uuid.uuid4()
         if (isinstance(league_type, LeagueType)):
             self.league_type = league_type
@@ -18,7 +19,7 @@ class LeagueSettings(object):
         if (isinstance(positions, dict) and len(dict) > 0):
             self.positions = positions
         else:
-            positions = {
+            self.positions = {
                 Positions.catcher: (2, 2),
                 Positions.first_base: (1, 1),
                 Positions.second_base: (1, 1),
@@ -37,9 +38,10 @@ class LeagueSettings(object):
             self.avg_obp = AvgObp.avg
         self.min_ab_year = min_ab_year
         self.min_ip_year = min_ip_year
+        self.min_gp_year = min_gp_year
         self.team_career_ip = team_career_ip
         if type_distribution == None:
-            if self.type == LeagueType.decades:
+            if self.league_type == LeagueType.decades:
                 batter_decades = {
                     Decades.dec_1870s: (0, 1),
                     Decades.dec_1880s: (0, 1),

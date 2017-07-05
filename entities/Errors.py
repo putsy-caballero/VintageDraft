@@ -5,8 +5,14 @@ class Error(Exception):
     pass
 
 class InvalidPositionError(Error):
-    def __init__(self, message):
+    def __init__(self, message, position: Positions):
         self.message = message
+        self.position = position
+
+class InvalidYearError(Error):
+    def __init__(self, message, year: int):
+        self.message = message
+        self.year = year
 
 class PositionFullError(Error):
     def __init__(self, message, position: Positions):

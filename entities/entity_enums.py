@@ -1,9 +1,8 @@
 from enum import Enum
 
+
 class LeagueType(Enum):
     decades = 1
-
-
 # last_names = 2
 #    teams = 3
 

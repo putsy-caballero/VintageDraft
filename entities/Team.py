@@ -6,9 +6,10 @@ from entities.LeagueSettings import LeagueSettings
 from entities.Player import Player
 from entities.Pitcher import Pitcher
 from entities.User import User
-from entities.Utilities import get_decade
+from entities.Utilities import Utilities
 from typing import Type
 import uuid
+
 
 class Team(object):
 
@@ -26,28 +27,83 @@ class Team(object):
         decade_players = {Batter: {}, Pitcher: {}}
         decade_players[Batter] = {key: 0 for key in Decades}
         decade_players[Pitcher] = {key: 0 for key in Decades}
-        for k, v in self.players:
-            for k2, v2 in v:
-                decade_players[k][get_decade(v)] += 1
+        for k in self.players:
+            for k2 in self.players[k]:
+                for player in self.players[k][k2]:
+                    decade_players[k][Utilities.get_decade(player[0], player[1])] += 1
         return decade_players
 
-    def add_player(self, position: Type(Positions), player: Type(Player), year: int):
-        settings = self.league.league_settings
+    def add_player(self, player: Type(Player), position: Type(Positions), year: int):
+        settings: LeagueSettings = self.league.league_settings
         if position not in settings.positions:
-            raise Errors.InvalidPositionError("invalid position: " + position)
+            raise Errors.InvalidPositionError("invalid position", position)
+        if not player.valid_year(year, settings):
+            raise Errors.InvalidYearError("invalid best year", year)
+        if not player.pos_qual_career(position, settings):
+            raise Errors.InvalidPositionError("not enough games at position", position)
         max_at_position = settings.positions[position][1]
         position_players = self.players[type(player)][position]
         if len(position_players) >= max_at_position:
-            raise Errors.PositionFullError("Position full", position)
+            raise Errors.PositionFullError("position full", position)
         else:
             if settings.league_type == LeagueType.decades:
                 decade_players = self.get_team_decades()
-                decade = get_decade(player, year)
+                decade = Utilities.get_decade(player, year)
                 if decade_players[type(player)][decade] >= settings.type_distribution[type(player)][decade][1]:
-                    raise Errors.DecadeFullError("Decade full", decade)
+                    raise Errors.DecadeFullError("decade full", decade)
 
             # TODO: add logic for names/teams
-            self.players[position].append(player)
+            self.players[type(player)][position].append((player, year))
+
+    @staticmethod
+    def calculate_obp(stats: dict):
+        reached = stats["H"] + stats["BB"]
+        pa = stats["AB"] + stats["BB"]
+        if "HBP" in stats:
+            reached += int(stats["HBP"] or 0)
+            pa += int(stats["HBP"] or 0)
+        if "SF" in stats:
+            pa += int(stats["SF"] or 0)
+        return reached / pa
+
+    def generate_stats(self):
+        overall_stats = {}
+        overall_stats[Batter] = {}
+        overall_stats[Batter]["BY"] = {}
+        overall_stats[Batter]["Career"] = {}
+        overall_stats[Pitcher] = {}
+        overall_stats[Pitcher]["BY"] = {}
+        overall_stats[Pitcher]["Career"] = {}
+
+        batters = False
+        for k in self.players[Batter]:
+            for player in self.players[Batter][k]:
+                batters = True
+                for stat in player[0].stats.batting_career_stats:
+                    overall_stats[Batter]["Career"][stat] = overall_stats[Batter]["Career"].get(stat, 0) + int(player[0].stats.batting_career_stats[stat] or 0)
+                    overall_stats[Batter]["BY"][stat] = overall_stats[Batter]["BY"].get(stat, 0) + int(player[0].stats.batting_year_stats[player[1]][stat] or 0)
+        if batters:
+            overall_stats[Batter]["Career"]["AVG"] = overall_stats[Batter]["Career"]["H"] / overall_stats[Batter]["Career"]["AB"]
+            overall_stats[Batter]["Career"]["OBP"] = Team.calculate_obp(overall_stats[Batter]["Career"])
+            overall_stats[Batter]["BY"]["AVG"] = overall_stats[Batter]["BY"]["H"] / overall_stats[Batter]["BY"]["AB"]
+            overall_stats[Batter]["BY"]["OBP"] = Team.calculate_obp(overall_stats[Batter]["BY"])
+
+        pitchers = False
+        for k in self.players[Pitcher]:
+            for player in self.players[Pitcher][k]:
+                pitchers = True
+                for stat in player[0].stats.pitching_career_stats:
+                    overall_stats[Pitcher]["Career"][stat] = overall_stats[Pitcher]["Career"].get(stat, 0) + int(player[0].stats.pitching_career_stats[stat] or 0)
+                    overall_stats[Pitcher]["BY"][stat] = overall_stats[Pitcher]["BY"].get(stat, 0) + int(player[0].stats.pitching_year_stats[player[1]][stat] or 0)
+        if pitchers:
+            overall_stats[Pitcher]["Career"]["ERA"] = overall_stats[Pitcher]["Career"]["ER"] * 27 / overall_stats[Pitcher]["Career"]["IPOuts"]
+            overall_stats[Pitcher]["Career"]["WHIP"] = 3 * (overall_stats[Pitcher]["Career"]["H"] + overall_stats[Pitcher]["Career"]["BB"]) / overall_stats[Pitcher]["Career"]["IPOuts"]
+            overall_stats[Pitcher]["BY"]["ERA"] = overall_stats[Pitcher]["BY"]["ER"] * 27 / overall_stats[Pitcher]["BY"]["IPOuts"]
+            overall_stats[Pitcher]["BY"]["WHIP"] = 3 * (overall_stats[Pitcher]["BY"]["H"] + overall_stats[Pitcher]["BY"]["BB"]) / overall_stats[Pitcher]["BY"]["IPOuts"]
+
+        return overall_stats
+
+
 
 
 
