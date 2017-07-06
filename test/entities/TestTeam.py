@@ -6,7 +6,7 @@ import unittest
 
 class TestTeam(unittest.TestCase):
     def test_get_team_decades(self):
-        team = TestSampleEntities.get_team()
+        team = TestSampleEntities.get_team("i")
         putsy = TestSampleEntities.get_putsy()
         team.add_player(putsy, Positions.second_base, 1948)
         decade_players = team.get_team_decades()
@@ -21,7 +21,7 @@ class TestTeam(unittest.TestCase):
         self.assertTrue(decade_players[Pitcher][Decades.dec_1920s] == 1)
 
     def test_add_player(self):
-        team = TestSampleEntities.get_team()
+        team = TestSampleEntities.get_team("i")
         putsy = TestSampleEntities.get_putsy()
         team.add_player(putsy, Positions.second_base, 1948)
         self.assertEqual(team.players[Batter][Positions.second_base][0][0], putsy)
@@ -36,11 +36,12 @@ class TestTeam(unittest.TestCase):
             team.add_player(putsy, Positions.first_base, 1948)
 
     def test_generate_stats(self):
-        team = TestSampleEntities.get_team()
+        team = TestSampleEntities.get_team("i")
         putsy = TestSampleEntities.get_putsy()
         team.add_player(putsy, Positions.second_base, 1948)
         team.add_player(putsy, Positions.middle_infield, 1951)
         stats = team.generate_stats()
+        print(stats)
         self.assertEqual(stats[Batter]["Career"]["HR"], 2)
         self.assertEqual(stats[Batter]["BY"]["RBI"], 30)
         self.assertAlmostEqual(stats[Batter]["BY"]["AVG"], 116/512)

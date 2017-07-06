@@ -1,12 +1,12 @@
 from entities.Batter import Batter
-from entities.entity_enums import LeagueType, ScoringType, Positions, AvgObp, Decades, Categories
+from entities.entity_enums import *
 from entities.Pitcher import Pitcher
 import uuid
 
 
 class LeagueSettings(object):
 
-    def __init__(self, league_type, scoring_type, positions, pos_qual_career, avgobp, min_ab_year, min_ip_year, min_gp_year, team_career_ip, type_distribution):
+    def __init__(self, league_type, scoring_type, positions, pos_qual_career, avgobp, min_ab_year, min_ip_year, min_gp_year, team_career_ip, type_distribution, batting_categories, pitching_categories):
         self.uuid = uuid.uuid4()
         if (isinstance(league_type, LeagueType)):
             self.league_type = league_type
@@ -81,4 +81,15 @@ class LeagueSettings(object):
                 }
         else:
             self.type_distribution = type_distribution
-
+        if batting_categories == None:
+            self.batting_categories = [BattingCategories.HR, BattingCategories.R, BattingCategories.RBI, BattingCategories.SB]
+            if self.avg_obp == AvgObp.avg:
+                self.batting_categories.append(BattingCategories.AVG)
+            else:
+                self.batting_categories.append(BattingCategories.OBP)
+        else:
+            self.batting_categories = batting_categories
+        if pitching_categories == None:
+            self.pitching_categories = [PitchingCategories.ERA, PitchingCategories.WHIP, PitchingCategories.W, PitchingCategories.SO, PitchingCategories.SV]
+        else:
+            self.pitching_categories = pitching_categories

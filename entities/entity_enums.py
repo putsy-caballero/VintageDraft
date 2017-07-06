@@ -51,5 +51,17 @@ class Decades(Enum):
     dec_2000s = 2000, 2009,
     dec_2010s = 2010, 2019
 
-class Categories(Enum):
-    a = 1
+class BattingCategories(Enum):
+    AVG = "AVG"
+    OBP = "OBP"
+    HR = "HR"
+    RBI = "RBI"
+    R = "R"
+    SB = "SB"
+
+class PitchingCategories(Enum):
+    ERA = "ERA"
+    WHIP = "WHIP"
+    W = "W"
+    SO = "SO"
+    SV = "SV"

@@ -23,6 +23,12 @@ class Team(object):
         del self.players[Batter][Positions.pitcher]
         self.players[Pitcher] = {Positions.pitcher: []}
 
+    def __str__(self):
+        return self.name + " (" + str(self.user) + ")"
+
+    def __repr__(self):
+        return self.name + " (" + str(self.user) + ")"
+
     def get_team_decades(self):
         decade_players = {Batter: {}, Pitcher: {}}
         decade_players[Batter] = {key: 0 for key in Decades}
@@ -87,7 +93,10 @@ class Team(object):
             overall_stats[Batter]["Career"]["OBP"] = Team.calculate_obp(overall_stats[Batter]["Career"])
             overall_stats[Batter]["BY"]["AVG"] = overall_stats[Batter]["BY"]["H"] / overall_stats[Batter]["BY"]["AB"]
             overall_stats[Batter]["BY"]["OBP"] = Team.calculate_obp(overall_stats[Batter]["BY"])
-
+        else:
+            for cat in self.league.league_settings.batting_categories:
+                overall_stats[Batter]["Career"][cat.value] = 0
+                overall_stats[Batter]["BY"][cat.value] = 0
         pitchers = False
         for k in self.players[Pitcher]:
             for player in self.players[Pitcher][k]:
@@ -100,7 +109,10 @@ class Team(object):
             overall_stats[Pitcher]["Career"]["WHIP"] = 3 * (overall_stats[Pitcher]["Career"]["H"] + overall_stats[Pitcher]["Career"]["BB"]) / overall_stats[Pitcher]["Career"]["IPOuts"]
             overall_stats[Pitcher]["BY"]["ERA"] = overall_stats[Pitcher]["BY"]["ER"] * 27 / overall_stats[Pitcher]["BY"]["IPOuts"]
             overall_stats[Pitcher]["BY"]["WHIP"] = 3 * (overall_stats[Pitcher]["BY"]["H"] + overall_stats[Pitcher]["BY"]["BB"]) / overall_stats[Pitcher]["BY"]["IPOuts"]
-
+        else:
+            for cat in self.league.league_settings.pitching_categories:
+                overall_stats[Pitcher]["Career"][cat.value] = 0
+                overall_stats[Pitcher]["BY"][cat.value] = 0
         return overall_stats
 
 

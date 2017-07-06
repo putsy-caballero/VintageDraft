@@ -7,9 +7,9 @@ class TestBatter(unittest.TestCase):
     def test_valid_year(self):
         league_settings = TestSampleEntities.get_league_settings()
         putsy = TestSampleEntities.get_putsy()
-        self.assertTrue(putsy.valid_year("1948", league_settings))
-        self.assertFalse(putsy.valid_year("1949", league_settings))
-        self.assertFalse(putsy.valid_year("1965", league_settings))
+        self.assertTrue(putsy.valid_year(1948, league_settings))
+        self.assertFalse(putsy.valid_year(1949, league_settings))
+        self.assertFalse(putsy.valid_year(1965, league_settings))
 
     def test_pos_qual_career(self):
         league_settings = TestSampleEntities.get_league_settings()

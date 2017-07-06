@@ -1,12 +1,16 @@
-from entities.Batter import Batter
-from entities.entity_enums import Decades
-from entities.Utilities import Utilities
-from test.entities.TestSampleEntities import *
+#from entities.Batter import Batter
+#from entities.entity_enums import Decades
+#from entities.Utilities import Utilities
+#from test.entities.TestSampleEntities import *
 
-a = ("foo", 3)
-a.append("bar")
-print(a)
 
+b = {}
+b["foo"] = {}
+b["foo"]["bar"] = {}
+b["foo"]["bar"]["baz"] = 3
+
+q = [[i, j, k] for i in b for j in b[i] for k in b[i][j]]
+print(q)
 #
 # l = [None, 3]
 # l.sort()

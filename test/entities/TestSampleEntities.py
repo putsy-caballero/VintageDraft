@@ -9,7 +9,7 @@ from entities.User import User
 class TestSampleEntities(object):
     @staticmethod
     def get_league_settings() -> LeagueSettings:
-        return LeagueSettings(None, None, None, 200, None, 100, 100, 40, 17000, None)
+        return LeagueSettings(None, None, None, 200, None, 100, 100, 40, 17000, None, None, None)
 
     @staticmethod
     def get_league() -> League:
@@ -17,12 +17,12 @@ class TestSampleEntities(object):
         return League("Test League", league_settings, 720)
 
     @staticmethod
-    def get_user() -> User:
-        return User("test", "testpw", "Mike", "foo")
+    def get_user(i) -> User:
+        return User("test" + i, "testpw" + i, "Mike" + i, "foo" + i)
 
     @staticmethod
-    def get_team() -> Team:
-        return Team(TestSampleEntities.get_league(), "test league", TestSampleEntities.get_user())
+    def get_team(i) -> Team:
+        return Team(TestSampleEntities.get_league(), "test team" + i, TestSampleEntities.get_user(i))
 
     @staticmethod
     def get_putsy() -> Batter:
