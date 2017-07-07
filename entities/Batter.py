@@ -1,6 +1,110 @@
+from entities import db
 from entities.entity_enums import Positions
 from entities.Player import Player
 
+class BatterYearStats(db.Model):
+    playerID = db.Column(db.String(9), primary_key=True)
+    year = db.Column(db.Integer, primary_key=True)
+    G = db.Column(db.Integer, nullable=False)
+    AB = db.Column(db.Integer, nullable=False)
+    R = db.Column(db.Integer, nullable=False)
+    H = db.Column(db.Integer, nullable=False)
+    DOUBLES = db.Column(db.Integer, nullable=False)
+    TRIPLES = db.Column(db.Integer, nullable=False)
+    HR = db.Column(db.Integer, nullable=False)
+    RBI = db.Column(db.Integer, nullable=False)
+    SB = db.Column(db.Integer, nullable=False)
+    CS = db.Column(db.Integer, nullable=False)
+    BB = db.Column(db.Integer, nullable=False)
+    SO = db.Column(db.Integer, nullable=False)
+    IBB = db.Column(db.Integer, nullable=False)
+    HBP = db.Column(db.Integer, nullable=False)
+    SH = db.Column(db.Integer, nullable=False)
+    SF = db.Column(db.Integer, nullable=False)
+    AVG = db.Column(db.Float, nullable=False)
+    OBP = db.Column(db.Float, nullable=False)
+    SLG = db.Column(db.Float, nullable=False)
+
+    def __init__(self, id, year, stats):
+        self.playerID = id
+        self.year = year
+        self.G = stats['G']
+        self.AB = stats['AB']
+        self.R = stats['R']
+        self.H = stats['H']
+        self.DOUBLES = stats['2B']
+        self.TRIPLES = stats['3B']
+        self.HR = stats['HR']
+        self.RBI = stats['RBI']
+        self.SB = stats['SB']
+        self.CS = stats['CS']
+        self.BB = stats['BB']
+        self.SO = stats['SO']
+        self.IBB = stats['IBB']
+        self.HBP = stats['HBP']
+        self.SH = stats['SH']
+        self.SF = stats['SF']
+        self.AVG = stats['AVG']
+        self.OBP = stats['OBP']
+        self.SLG = stats['SLG']
+
+class BatterCareerStats(db.Model):
+    playerID = db.Column(db.String(9), primary_key=True)
+    G = db.Column(db.Integer, nullable=False)
+    AB = db.Column(db.Integer, nullable=False)
+    R = db.Column(db.Integer, nullable=False)
+    H = db.Column(db.Integer, nullable=False)
+    DOUBLES = db.Column(db.Integer, nullable=False)
+    TRIPLES = db.Column(db.Integer, nullable=False)
+    HR = db.Column(db.Integer, nullable=False)
+    RBI = db.Column(db.Integer, nullable=False)
+    SB = db.Column(db.Integer, nullable=False)
+    CS = db.Column(db.Integer, nullable=False)
+    BB = db.Column(db.Integer, nullable=False)
+    SO = db.Column(db.Integer, nullable=False)
+    IBB = db.Column(db.Integer, nullable=False)
+    HBP = db.Column(db.Integer, nullable=False)
+    SH = db.Column(db.Integer, nullable=False)
+    SF = db.Column(db.Integer, nullable=False)
+    AVG = db.Column(db.Float, nullable=False)
+    OBP = db.Column(db.Float, nullable=False)
+    SLG = db.Column(db.Float, nullable=False)
+
+    def __init__(self, id, stats):
+        self.playerID = id
+        self.G = stats['G']
+        self.AB = stats['AB']
+        self.R = stats['R']
+        self.H = stats['H']
+        self.DOUBLES = stats['2B']
+        self.TRIPLES = stats['3B']
+        self.HR = stats['HR']
+        self.RBI = stats['RBI']
+        self.SB = stats['SB']
+        self.CS = stats['CS']
+        self.BB = stats['BB']
+        self.SO = stats['SO']
+        self.IBB = stats['IBB']
+        self.HBP = stats['HBP']
+        self.SH = stats['SH']
+        self.SF = stats['SF']
+        self.AVG = stats['AVG']
+        self.OBP = stats['OBP']
+        self.SLG = stats['SLG']
+
+class FielderPositionStats(db.Model):
+    playerID = db.Column(db.String(9), primary_key=True)
+    pos = db.Column(db.Enum(Positions), primary_key=True)
+    G = db.Column(db.Integer, nullable=False)
+    GS = db.Column(db.Integer, nullable=False)
+    InnOuts = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, id, pos, stats):
+        self.playerID = id
+        self.pos = pos
+        self.G = stats['G']
+        self.GS = stats['GS']
+        self.InnOuts = stats['InnOuts']
 
 class BatterStats(object):
 

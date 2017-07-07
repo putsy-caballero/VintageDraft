@@ -1,4 +1,7 @@
 import csv
+from entities import db
+from entities.Batter import BatterYearStats, BatterCareerStats, FielderPositionStats
+from entities.Pitcher import PitcherYearStats, PitcherCareerStats
 from entities.entity_enums import Positions
 
 class Dataloader(object):
@@ -61,6 +64,7 @@ class Dataloader(object):
             calc = Dataloader.calc_era_whip(pitcher_career_dict[key])
             pitcher_career_dict[key]['ERA'] = calc[0]
             pitcher_career_dict[key]['WHIP'] = calc[1]
+
         return (pitcher_year_dict, pitcher_career_dict)
 
     @staticmethod
@@ -129,5 +133,26 @@ class Dataloader(object):
 (batter_year_dict, batter_career_dict) = Dataloader.load_batter_data()
 fielder_dict = Dataloader.load_fielder_data()
 
-print (batter_year_dict['wagneho01'])
-print (fielder_dict['wagneho01'])
+db.create_all()
+
+for key in fielder_dict:
+    for pos in fielder_dict[key]:
+        fielder = FielderPositionStats(key, pos, fielder_dict[key][pos])
+        db.session.add(fielder)
+db.session.commit()
+
+for key in pitcher_year_dict:
+    pitcher_career = PitcherCareerStats(key, pitcher_career_dict[key])
+    db.session.add(pitcher_career)
+    for year in pitcher_year_dict[key]:
+        pitcher = PitcherYearStats(key, year, pitcher_year_dict[key][year])
+        db.session.add(pitcher)
+db.session.commit()
+
+for key in batter_year_dict:
+    batter_career = BatterCareerStats(key, batter_career_dict[key])
+    db.session.add(batter_career)
+    for year in batter_year_dict[key]:
+        batter = BatterYearStats(key, year, batter_year_dict[key][year])
+        db.session.add(batter)
+db.session.commit()

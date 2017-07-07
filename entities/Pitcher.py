@@ -1,5 +1,64 @@
+from entities import db
 from entities.entity_enums import Positions
 from entities.Player import Player
+
+class PitcherYearStats(db.Model):
+    playerID = db.Column(db.String(9), primary_key=True)
+    year = db.Column(db.Integer, primary_key=True)
+    W = db.Column(db.Integer, nullable=False)
+    L = db.Column(db.Integer, nullable=False)
+    G = db.Column(db.Integer, nullable=False)
+    SV = db.Column(db.Integer, nullable=False)
+    IPouts = db.Column(db.Integer, nullable=False)
+    H = db.Column(db.Integer, nullable=False)
+    ER = db.Column(db.Integer, nullable=False)
+    BB = db.Column(db.Integer, nullable=False)
+    SO = db.Column(db.Integer, nullable=False)
+    ERA = db.Column(db.Float, nullable=False)
+    WHIP = db.Column(db.Float, nullable=False)
+
+    def __init__(self, id, year, stats):
+        self.playerID = id
+        self.year = year
+        self.W = stats['W']
+        self.L = stats['L']
+        self.G = stats['G']
+        self.SV = stats['SV']
+        self.IPouts = stats['IPouts']
+        self.H = stats['H']
+        self.ER = stats['ER']
+        self.BB = stats['BB']
+        self.SO = stats['SO']
+        self.ERA = stats['ERA']
+        self.WHIP = stats['WHIP']
+
+class PitcherCareerStats(db.Model):
+    playerID = db.Column(db.String(9), primary_key=True)
+    W = db.Column(db.Integer, nullable=False)
+    L = db.Column(db.Integer, nullable=False)
+    G = db.Column(db.Integer, nullable=False)
+    SV = db.Column(db.Integer, nullable=False)
+    IPouts = db.Column(db.Integer, nullable=False)
+    H = db.Column(db.Integer, nullable=False)
+    ER = db.Column(db.Integer, nullable=False)
+    BB = db.Column(db.Integer, nullable=False)
+    SO = db.Column(db.Integer, nullable=False)
+    ERA = db.Column(db.Float, nullable=False)
+    WHIP = db.Column(db.Float, nullable=False)
+
+    def __init__(self, id, stats):
+        self.playerID = id
+        self.W = stats['W']
+        self.L = stats['L']
+        self.G = stats['G']
+        self.SV = stats['SV']
+        self.IPouts = stats['IPouts']
+        self.H = stats['H']
+        self.ER = stats['ER']
+        self.BB = stats['BB']
+        self.SO = stats['SO']
+        self.ERA = stats['ERA']
+        self.WHIP = stats['WHIP']
 
 
 class PitcherStats(object):

@@ -2,15 +2,16 @@
 #from entities.entity_enums import Decades
 #from entities.Utilities import Utilities
 #from test.entities.TestSampleEntities import *
+from entities import db
 
 
-b = {}
-b["foo"] = {}
-b["foo"]["bar"] = {}
-b["foo"]["bar"]["baz"] = 3
+#@app.route("/<u>")
+#def hello(u):
+#    return "Hello " + u
+#
+#if __name__ == '__main__':
+#    app.run()
 
-q = [[i, j, k] for i in b for j in b[i] for k in b[i][j]]
-print(q)
 #
 # l = [None, 3]
 # l.sort()
